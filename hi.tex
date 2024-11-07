@@ -1,0 +1,125 @@
+
+\documentclass{article}
+\usepackage{listings}
+\title{Information Management CA Report}
+\author{Matthew Power}
+\date{November 2024}
+\begin{document}
+  
+\maketitle
+  
+\tableofcontents
+
+\section{Introduction}
+   
+This is the first section.
+      
+\section{7 Step Algorithm}
+       
+
+The chosen ER model attempts to model a simple army. This model does not intend to be fully
+accurate but will contain some of the actual names of leaders/generals for the model. 
+Many assumptions were made as a lot of aspects of the organization is not public for obvious reasons. 
+From the report of the commission of the defense forces, there are diagrams of their proposed 
+future command structure which the ER model will be based on.
+
+
+\section{Code}
+\begin{lstlisting}
+    Create table soldier ( 
+        fname text,
+        lname text,
+        service_num int,
+        sex text, 
+        curr_rank text,
+        salary int,
+        DOB  date,
+        address text,
+        wounds text,
+        Unum int,
+        primary key(service_num),
+    
+        foreign key (Unum) references unit(unumber)
+    );
+    
+    Create table unit ( 
+        uname text,
+        unumber int,
+        uhq text,
+        leader_sn int, 
+        leader_startdate date,
+    
+        primary key (unumber),
+        foreign key (leader_sn) references soldier(service_num)
+    );
+    
+    create table branch (
+        bname text,
+        bnumber int,
+        bhq     int,
+        commander_sn int,
+        commander_startdate date,
+    
+        primary key (bnumber),
+        foreign key (commander_sn) references soldier(service_num)
+    );
+    
+    create table controls (
+        branchnum int,
+        opnumber int,
+        months    int,
+    
+        foreign key (branchnum) references branch(bnumber),
+        foreign key (opnumber) references operation(Onumber)
+    );
+    
+    create table operation (
+        oname text,
+        onumber int,
+        mainopnum int,
+    
+        primary key (onumber)
+        
+    );
+    
+    create table dependant (
+        dep_name text,
+        soldierSN int,
+        addressline text,
+        phone_number int,
+        relationship text,
+    
+        foreign key (soldiersn) references soldier(service_num)
+    
+    );
+    
+    create table baselocations (
+        branchnum int,
+        blocation text,
+    
+        foreign key(branchnum) references branch(bnumber)
+    );
+    
+    create table oplocations (
+        branchnum int,
+        blocation text,
+    
+        foreign key(branchnum) references branch(bnumber)
+    );
+    
+    create table wounds (
+        soldier_servicenum int,
+        wound text,
+        operationnum int,
+    
+        foreign key (soldier_servicenum) references soldier(service_num),
+        foreign key (operationnum) references operation(onumber)
+    );
+    
+    alter table unit
+    add primary key (unumber)
+    
+    alter table soldier
+    add foreign key (Unum) references unit(unumber)
+\end{lstlisting}
+\end{document}
